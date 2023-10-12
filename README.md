@@ -1,5 +1,5 @@
 # MCP342x
-A Rust crate for interfacing with the MCP3424 ADC.
+A Rust crate for interfacing with the MCP342x ADC.
 
 ## dependences
 - log
@@ -123,7 +123,7 @@ let voltage=adc.read_and_convert_adc(&mut i2c,1,16,1)?;  //chanel=1,16bitmode,pg
 ```
 
 ### Advenced use
-You can get raw data from mcp342x using read_mcp3424() and  convert raw data using read_and_convert_adc(). See script if you know details.
+You can get raw data(2 or 3 bytes) from mcp342x using read_mcp3424() and  convert raw data using read_and_convert_adc(). See script if you know details.
 
 
 ## Testing environment(2023/10/12)

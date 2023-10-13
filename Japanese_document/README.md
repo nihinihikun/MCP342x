@@ -20,7 +20,7 @@ let config = i2c::I2cConfig::new().baudrate(100.kHz().into());
 let mut i2c = i2c::I2cDriver::new(i2c, sda, scl, &config)?;
 ```
 ### 3. インスタンス化
-new()の引数はi2cの7bitのデバイスアドレスである．Adr0，Adr1のpinをデータシートのP.21のTable 5-3か以下の表のようにすることでアドレスを選択できる．
+new()の引数はi2cの7bitのデバイスアドレスである．Adr0，Adr1のpinをデータシートのP.21のTable 5-3か以下の表のようにすることでアドレスを選択できる．	もしadr0がhigh，adr1がlowであったら，スレーブアドレスは，"0b1101100"である．
 ```
 let adc =MCP342X::new(0b1101000);
 ```

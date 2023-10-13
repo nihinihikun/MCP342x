@@ -22,7 +22,8 @@ let mut i2c = i2c::I2cDriver::new(i2c, sda, scl, &config)?;
 ```
 ### 3. instantiate
 Argument of new() is device address.
-7bits device address is 0b110_1xxx. xxx is selectable. datasheet(P.21,Table5-3) or table below.
+7bits device address is 0b110_1xxx. xxx is selectable. datasheet(P.21,Table5-3) or table below. For example, if adr0 is high and adr1 is low, slave address is "0b1101100".
+
 ```
 let adc =MCP342X::new(0b1101000);
 ```
@@ -137,5 +138,5 @@ You can get raw data(2 or 3 bytes) from mcp342x using read_mcp3424() and  conver
 - embedded-hal = "=1.0.0-alpha.9"
 - esp-idf-hal = "0.40.1"
 ### hardware
-- M5Stamp c3
+- M5Stamp c3 Mate
 - mcp3424

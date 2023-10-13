@@ -22,7 +22,7 @@ let mut i2c = i2c::I2cDriver::new(i2c, sda, scl, &config)?;
 ### 3. インスタンス化
 new()の引数はi2cの7bitのデバイスアドレスである．Adr0，Adr1のpinをデータシートのP.21のTable 5-3か以下の表のようにすることでアドレスを選択できる．
 ```
-let adc =MCP3424::new(0b1101000);
+let adc =MCP342X::new(0b1101000);
 ```
 
 
@@ -116,11 +116,11 @@ let adc =MCP3424::new(0b1101000);
     - x1, x2, x4, x8
 
 ```
-let voltage=adc.read_and_convert_adc(&mut i2c,1,16,1)?;  //chanel=1,16bitmode,pga=x1
+let voltage=adc.read_and_convert_mcp342x(&mut i2c,1,16,1)?;  //chanel=1,16bitmode,pga=x1
 ```
 
 ### 高度な利用
-read_mcp3424() でmcp342xからの生データ(2 または 3 Byte)を得られる．また，read_and_convert_adc()でそのデータをdoubleの電圧値[V]に変換できる．詳細はスクリプトをよんで欲しい．
+read_mcp342x() でmcp342xからの生データ(2 または 3 Byte)を得られる．また，read_and_convert_mcp342x()でそのデータをdoubleの電圧値[V]に変換できる．詳細はスクリプトをよんで欲しい．
 
 
 ## テストした環境(2023/10/12)

@@ -7,9 +7,9 @@ A Rust crate for interfacing with the MCP342x ADC.
 - esp_idf_hal::delay::BLOCK
 
 ## Usage
-### 1. declare use mcp3424
+### 1. declare use mcp342x
 ```
-use mcp3424::MCP3424;
+use mcp342x::MCP342X;
 ```
 
 ### 2. decalre i2c
@@ -24,7 +24,7 @@ let mut i2c = i2c::I2cDriver::new(i2c, sda, scl, &config)?;
 Argument of new() is device address.
 7bits device address is 0b110_1xxx. xxx is selectable. datasheet(P.21,Table5-3) or table below.
 ```
-let adc =MCP3424::new(0b1101000);
+let adc =MCP342X::new(0b1101000);
 ```
 
 
@@ -119,7 +119,7 @@ Argument-num:
     - x1, x2, x4, x8
 
 ```
-let voltage=adc.read_and_convert_adc(&mut i2c,1,16,1)?;  //chanel=1,16bitmode,pga=x1
+let voltage=adc.read_and_convert_mcp342x(&mut i2c,1,16,1)?;  //chanel=1,16bitmode,pga=x1
 ```
 
 ### Advenced use

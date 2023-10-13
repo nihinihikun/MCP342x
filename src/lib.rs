@@ -1,4 +1,4 @@
-//MCP3424 lib nihinihi
+//MCP342x lib
 use log::*;
 use esp_idf_hal::{i2c,delay::BLOCK};//
 
@@ -17,63 +17,63 @@ use esp_idf_hal::{i2c,delay::BLOCK};//
 // | 0  | 0  | 0  || Float     | Float     |
 //exapmle:if Adr0=HIGH,Adr1=LOW, address is 0b1101_"010"0
 
-pub struct MCP3424 {
-    mcp3424_address: u8,
+pub struct MCP342X {
+    mcp342x_address: u8,
 }
 
-impl MCP3424 {
+impl MCP342X {
     pub fn new(address: u8) -> Self {
-        MCP3424 {
-            mcp3424_address: address,
+        MCP342X {
+            mcp342x_address: address,
         }
     }
-    pub fn read_and_convert_adc(&self,i2c: &mut i2c::I2cDriver,channel:u8,sample_rate_bit:u8,pga:u8)->Result<f64, anyhow::Error>{
-        let buffer_vec=self.read_mcp3424(i2c,channel,sample_rate_bit,pga)?;
+    pub fn read_and_convert_mcp342x(&self,i2c: &mut i2c::I2cDriver,channel:u8,sample_rate_bit:u8,pga:u8)->Result<f64, anyhow::Error>{
+        let buffer_vec=self.read_mcp342x(i2c,channel,sample_rate_bit,pga)?;
         let voltage=self.convert_readdata(&buffer_vec)?;
         Ok(voltage)
     }  
 
-    pub fn read_mcp3424(&self,i2c: &mut i2c::I2cDriver,channel:u8,sample_rate_bit:u8,pga:u8) -> Result<Vec<u8>, anyhow::Error> {  
-        let mut config_mcp3424 = 0b1000_0000;
+    pub fn read_mcp342x(&self,i2c: &mut i2c::I2cDriver,channel:u8,sample_rate_bit:u8,pga:u8) -> Result<Vec<u8>, anyhow::Error> {  
+        let mut config_mcp342x = 0b1000_0000;
         // match readybit {
-        //     1=>{config_mcp3424=config_mcp3424|0b1000_0000;}
-        //     0=>{config_mcp3424=config_mcp3424|0b0000_0000;}
+        //     1=>{config_mcp342x=config_mcp342x|0b1000_0000;}
+        //     0=>{config_mcp342x=config_mcp342x|0b0000_0000;}
         // }
         match channel{
-            1=>{config_mcp3424=config_mcp3424|0b0000_0000;}
-            2=>{config_mcp3424=config_mcp3424|0b0010_0000;}
-            3=>{config_mcp3424=config_mcp3424|0b0100_0000;}
-            4=>{config_mcp3424=config_mcp3424|0b0110_0000;}
+            1=>{config_mcp342x=config_mcp342x|0b0000_0000;}
+            2=>{config_mcp342x=config_mcp342x|0b0010_0000;}
+            3=>{config_mcp342x=config_mcp342x|0b0100_0000;}
+            4=>{config_mcp342x=config_mcp342x|0b0110_0000;}
             _=>{debug!("user designed channel is out of range");}
         }
         // match conversation_mode {
-        //     continuous => config_mcp3424 = config_mcp3424 | 0b0000_0000,
-        //     one_shot => config_mcp3424 = config_mcp3424 | 0b0000_1000,
+        //     continuous => config_mcp342x = config_mcp342x | 0b0000_0000,
+        //     one_shot => config_mcp342x = config_mcp342x | 0b0000_1000,
         // }
         match sample_rate_bit{
-            12=>{config_mcp3424=config_mcp3424|0b0000_0000;}
-            14=>{config_mcp3424=config_mcp3424|0b0000_0100;}
-            16=>{config_mcp3424=config_mcp3424|0b0000_1000;}
-            18=>{config_mcp3424=config_mcp3424|0b0000_1100;}
+            12=>{config_mcp342x=config_mcp342x|0b0000_0000;}
+            14=>{config_mcp342x=config_mcp342x|0b0000_0100;}
+            16=>{config_mcp342x=config_mcp342x|0b0000_1000;}
+            18=>{config_mcp342x=config_mcp342x|0b0000_1100;}
             _=>{debug!("user designed sample_rate_bit is out of range");}
         }
         match pga{
-            1=>{config_mcp3424=config_mcp3424|0b0000_0000;}
-            2=>{config_mcp3424=config_mcp3424|0b0000_0001;}
-            4=>{config_mcp3424=config_mcp3424|0b0000_0010;}
-            8=>{config_mcp3424=config_mcp3424|0b0000_0011;}
+            1=>{config_mcp342x=config_mcp342x|0b0000_0000;}
+            2=>{config_mcp342x=config_mcp342x|0b0000_0001;}
+            4=>{config_mcp342x=config_mcp342x|0b0000_0010;}
+            8=>{config_mcp342x=config_mcp342x|0b0000_0011;}
             _=>{debug!("user designed pga is out of range");}
         }
-        debug!("senddata--config_mcp3424: {:08b}",config_mcp3424);
+        debug!("senddata--config_mcp342x: {:08b}",config_mcp342x);
         //decide buffersize by sample_rate,only 18bitmode needs 4byte buffer,other mode needs 3byte buffer
         let buffer_length;
-        if (config_mcp3424 & 0b0000_1100) == 0b0000_1100 {
+        if (config_mcp342x & 0b0000_1100) == 0b0000_1100 {
             buffer_length = 4;
         } else {
             buffer_length = 3;
         }
         let mut buffer = vec![0u8; buffer_length];
-        i2c.write_read(self.mcp3424_address, &[config_mcp3424], &mut buffer, BLOCK)?;
+        i2c.write_read(self.mcp342x_address, &[config_mcp342x], &mut buffer, BLOCK)?;
         Ok(buffer)
     }
 

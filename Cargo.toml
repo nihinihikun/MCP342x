@@ -1,0 +1,19 @@
+[package]
+name = "mcp3424"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+esp-idf-sys = { version = "=0.32", features = ["binstart"] }
+esp-idf-svc = { version="=0.45", features = ["experimental", "alloc"] }
+embedded-svc = "0.24"
+log = "0.4"
+anyhow = "1"
+embedded-hal = "=1.0.0-alpha.9"
+esp-idf-hal = "0.40.1"
+
+[build-dependencies]
+embuild = "0.28"
+anyhow = "1"

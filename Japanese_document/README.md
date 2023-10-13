@@ -1,18 +1,17 @@
 # MCP342x
-A Rust crate for interfacing with the MCP342x ADC.
-
-## dependences
+MCP342x シリーズのRustライブラリ
+## 依存関係
 - log
 - esp_idf_hal::i2c
 - esp_idf_hal::delay::BLOCK
 
-## Usage
-### 1. declare use mcp3424
+## 使い方
+### 1. mcp3424を使うことを宣言
 ```
 use mcp3424::MCP3424;
 ```
 
-### 2. decalre i2c
+### 2. i2c関係を宣言
 ```
 let i2c = peripherals.i2c0;
 let sda = peripherals.pins.gpio0;//declare sda pin
@@ -20,9 +19,8 @@ let scl = peripherals.pins.gpio1;//declare scl pin
 let config = i2c::I2cConfig::new().baudrate(100.kHz().into());
 let mut i2c = i2c::I2cDriver::new(i2c, sda, scl, &config)?;
 ```
-### 3. instantiate
-Argument of new() is device address.
-7bits device address is 0b110_1xxx. xxx is selectable. datasheet(P.21,Table5-3) or table below.
+### 3. インスタンス化
+new()の引数はi2cの7bitのデバイスアドレスである．Adr0，Adr1のpinをデータシートのP.21のTable 5-3か以下の表のようにすることでアドレスを選択できる．
 ```
 let adc =MCP3424::new(0b1101000);
 ```
@@ -105,11 +103,10 @@ let adc =MCP3424::new(0b1101000);
 	</tr>
 </table>
 
-### 4. Get voltage
-After instantiate, you can get voltage data as f64 using read_and_convert_adc. 
-You can select channel, samplerate, pga.
+### 4. 電圧測定
+インスタンス化がすんだら，read_and_convert_adc()でdouble型の電圧[V]が受け取れる．チャンネル，サンプリングレート，拡大率が選択できる．
 
-Argument-num:
+引数:
 1. I2C
 1. channel
     - 1, 2, 3(MCP3424 only), 4(MCP3424 only)
@@ -122,12 +119,12 @@ Argument-num:
 let voltage=adc.read_and_convert_adc(&mut i2c,1,16,1)?;  //chanel=1,16bitmode,pga=x1
 ```
 
-### Advenced use
-You can get raw data(2 or 3 bytes) from mcp342x using read_mcp3424() and  convert raw data using read_and_convert_adc(). See script if you know details.
+### 高度な利用
+read_mcp3424() でmcp342xからの生データ(2 または 3 Byte)を得られる．また，read_and_convert_adc()でそのデータをdoubleの電圧値[V]に変換できる．詳細はスクリプトをよんで欲しい．
 
 
-## Testing environment(2023/10/12)
-### software
+## テストした環境(2023/10/12)
+### ソフトウェア
 - WSL2 (Ubuntu 20.04)
 - esp-idf-sys = { version = "=0.32", features = ["binstart"] }
 - esp-idf-svc = { version="=0.45", features = ["experimental", "alloc"] }
@@ -136,6 +133,6 @@ You can get raw data(2 or 3 bytes) from mcp342x using read_mcp3424() and  conver
 - anyhow = "1"
 - embedded-hal = "=1.0.0-alpha.9"
 - esp-idf-hal = "0.40.1"
-### hardware
+### ハードウェア
 - M5Stamp c3
 - mcp3424
